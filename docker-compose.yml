@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  backend:
+    container_name: RoomBooking-backend
+    build:
+      context: ./backend
+    ports:
+      - "60000:8000"
+    depends_on:
+      - database
+    volumes:
+      - ./backend:/var/www/html
+
+  database:
+    container_name: RoomBooking-database
+    hostname: ${DB_HOSTNAME}
+    build: ./database/
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+    ports:
+      - "60001:3306"
+    volumes:
+      - ./database/.dbData:/var/lib/mysql
+
+  adminer:
+    container_name: RoomBooking-adminer
+    image: adminer
+    ports:
+      - "60002:8080"
+    depends_on:
+      - database
+    links:
+      - database
+    restart: always
