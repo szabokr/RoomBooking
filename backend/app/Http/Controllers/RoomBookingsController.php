@@ -14,6 +14,11 @@ class RoomBookingsController extends Controller
 
     public function list()
     {
+        $user = Auth::user();
+        if ($user['permission_id'] == 2) {
+            $results = $this->model::with(['user', 'room'])->where('user_id', $user['id'])->get();
+            return response()->json(['success' => true, 'results' => $results], 200);
+        }
         $results = $this->model::with(['user', 'room'])->get();
         return response()->json(['success' => true, 'results' => $results], 200);
     }

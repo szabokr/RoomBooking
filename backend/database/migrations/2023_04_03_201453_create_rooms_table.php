@@ -16,24 +16,6 @@ return new class extends Migration
             $table->string('name')->comment('Szoba elnevezáse');
             $table->timestamps();
         });
-
-        DB::table('rooms')->insert([
-            [
-                'name' => 'Szoba1',
-            ],
-            [
-                'name' => 'Szoba2',
-            ],
-            [
-                'name' => 'Szoba3',
-            ],
-            [
-                'name' => 'Szoba4',
-            ],
-            [
-                'name' => 'Szoba5',
-            ]
-        ]);
     }
 
     /**

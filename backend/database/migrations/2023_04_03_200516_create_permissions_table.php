@@ -16,18 +16,6 @@ return new class extends Migration
             $table->string('permission', 5)->comment('Jogosultság');
             $table->timestamps();
         });
-
-        DB::table('permissions')->insert([
-            [
-                'permission' => 'Guest',
-            ],
-            [
-                'permission' => 'User',
-            ],
-            [
-                'permission' => 'Admin',
-            ]
-        ]);
     }
 
     /**
