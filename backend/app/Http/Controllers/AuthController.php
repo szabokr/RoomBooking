@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -33,28 +34,5 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['success' => true], 201);
-    }
-
-    public function login(Request $request)
-    {
-        $data = $request->validate($this->model::$validationLogin);
-        if (!Auth::attempt($request->only(['email', 'password']))) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Email and Password does not match.',
-            ], 401);
-        }
-        $user = $this->model::where('email', $data['email'])->first();
-        return response()->json([
-            'success' => true,
-            'token' => $user->createToken("api_token")->plainTextToken
-        ], 200);
-    }
-
-    public function logout()
-    {
-        $user = Auth::user();
-        $user->currentAccessToken()->delete();
-        return response()->json(['success' => true], 200);
     }
 }

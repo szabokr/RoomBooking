@@ -15,7 +15,7 @@ class UsersController extends Controller
 
     public function list()
     {
-        $results = $this->model::whereNotIn('permission_id', [3])->get();
+        $results = $this->model::whereNotIn('permission_id', [1, 3])->get();
         return response()->json(['success' => true, 'results' => $results], 200);
     }
 

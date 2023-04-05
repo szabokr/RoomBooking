@@ -11,12 +11,6 @@ use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
-
-    use DatabaseTransactions;
-    /**
-     * A basic feature test example.
-     */
-
     public $model = User::class;
 
     public function testRegister(): void
@@ -29,7 +23,7 @@ class AuthControllerTest extends TestCase
         ];
 
         $response = $this->json('POST', '/api/register', $body);
-        $response->assertStatus(201);
+        $response->assertStatus(201)->assertJson(['success' => true]);
         $this->assertDatabaseHas($this->model, [
             'name' => 'Kiss János',
             'email' => 'kissjancsi@gmail.com',
