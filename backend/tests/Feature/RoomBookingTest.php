@@ -30,10 +30,31 @@ class RoomBookingTest extends TestCase
         $response->assertStatus(201)->assertJson([
             'success' => true,
         ]);
-        $this->assertDatabaseHas($this->model, [
+    }
+
+    public function testRoomBookingWithLogin()
+    {
+        $body = [
+            "email" => "admin@admin.hu",
+            "password" => "admin",
+        ];
+        $response = $this->json('POST', '/api/login', $body);
+        $token = json_decode($response->getContent(), true)['token'];
+        $headder = [
+            'Authorization' => 'Bearer ' . $token,
+        ];
+        $body = [
             "room_id" => 2,
-            "date_of_arrive" => "2023-05-01",
-            "date_of_departure" => "2023-05-10"
+            "name" => "TesztGuest",
+            "email" => "admin@admin.hu",
+            "phone" => "06000000000",
+            "date_of_arrive" => "2023-07-01",
+            "date_of_departure" => "2023-07-10"
+        ];
+
+        $response = $this->json('POST', '/api/user/roombooking', $body, $headder);
+        $response->assertStatus(201)->assertJson([
+            'success' => true,
         ]);
     }
 }

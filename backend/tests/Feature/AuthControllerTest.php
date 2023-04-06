@@ -11,6 +11,8 @@ use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
 {
+    use DatabaseTransactions;
+
     public $model = User::class;
 
     public function testRegister(): void
@@ -30,5 +32,25 @@ class AuthControllerTest extends TestCase
             'phone' => '06303300120',
             'permission_id' => '2',
         ]);
+    }
+
+    public function testRegisterUserInDb(): void
+    {
+        User::create([
+            "name" => "Kiss János",
+            "email" => "kiss@gmail.com",
+            "phone" => "0630330019",
+        ]);
+
+        $body = [
+            'name' => 'Kiss János',
+            "email" => "kiss@gmail.com",
+            "phone" => "0630330019",
+            "password" => "KissJanos1!",
+            'permission_id' => '2',
+        ];
+
+        $response = $this->json('POST', '/api/register', $body);
+        $response->assertStatus(201)->assertJson(['success' => true]);
     }
 }

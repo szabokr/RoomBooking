@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    use DatabaseTransactions;
+
     public $model = User::class;
 
     public function register(Request $request)
@@ -34,5 +36,28 @@ class AuthController extends Controller
         ]);
 
         return response()->json(['success' => true], 201);
+    }
+
+    public function login(Request $request)
+    {
+        $data = $request->validate($this->model::$validationLogin);
+        if (!Auth::attempt($request->only(['email', 'password']))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Email and Password does not match.',
+            ], 401);
+        }
+        $user = $this->model::where('email', $data['email'])->first();
+        return response()->json([
+            'success' => true,
+            'token' => $user->createToken("api_token")->plainTextToken
+        ], 200);
+    }
+
+    public function logout()
+    {
+        $user = Auth::user();
+        $user->currentAccessToken()->delete();
+        return response()->json(['success' => true], 200);
     }
 }
